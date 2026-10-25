@@ -8,6 +8,7 @@ class Magpie {
   static WINDOW_HEIGHT = 10;
   static BEAM_WIDTH = 80;
   static BEAM_HEIGHT = 160;
+  static Cargo_Y = 30;
 
   constructor(x, y) {
     this.physics = new Physics(x, y);
@@ -20,6 +21,10 @@ class Magpie {
       this.beamActive = active;
     }
   }
+  captureJunk(junk) {
+  this.capturedJunk = junk;
+  this.enableBeam(false);
+}
 
   beamContains(point) {
     if (!this.beamActive) return false;
@@ -44,21 +49,44 @@ class Magpie {
   }
 
   update(delta) {
-    this.physics.move(delta, { constrain: true });
-  }
+  this.physics.move(delta, { constrain: true });
 
-  draw() {
+  if (this.capturedJunk) {
+    const angle = this.physics.rotation;
+
+    this.capturedJunk.physics.x =
+      this.physics.x -
+      Math.sin(angle) * Magpie.CARGO_Y;
+
+    this.capturedJunk.physics.y =
+      this.physics.y +
+      Math.cos(angle) * Magpie.CARGO_Y;
+  }
+}
+
+draw() {
+  push();
+
+  translate(this.physics.x, this.physics.y);
+
+  if (this.capturedJunk) {
     push();
 
-    translate(this.physics.x, this.physics.y);
+    rotate(this.physics.rotation);
+    translate(0, Magpie.CARGO_Y);
 
-    Magpie.drawMagpie({
-      rotation: this.physics.rotation,
-      beam: this.beamActive
-    });
+    Junk.drawJunk();
 
     pop();
   }
+
+  Magpie.drawMagpie({
+    rotation: this.physics.rotation,
+    beam: this.beamActive
+  });
+
+  pop();
+}
 
   static drawMagpie({ rotation, beam }) {
     push();

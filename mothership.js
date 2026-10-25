@@ -5,6 +5,7 @@ class Mothership {
   static CORNER_RADIUS = 12;
   static NUM_PORTHOLES = 4;
   static PORTHOLE_DIAMETER = 12;
+  static PICKUP_DIAMETER = 140;
 
   constructor(x, y) {
     this.physics = new Physics(x, y);

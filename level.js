@@ -33,13 +33,15 @@ class Level {
     );
   }
 
-  update(delta) {
+ update(delta, finished = false) {
+  if (!finished) {
     this.time.elapsed += delta;
-
-    for (const item of this.junk) {
-      item.update(delta);
-    }
   }
+
+  for (const item of this.junk) {
+    item.update(delta);
+  }
+}
 
   draw(score, lives) {
     push();
